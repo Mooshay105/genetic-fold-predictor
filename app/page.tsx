@@ -78,12 +78,15 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col text-center justify-center">
-			<h1 className="text-2xl font-bold">Hello! This is my 56DIGI website.</h1>
-			<h2 className="text-xl font-bold">Pick the AI image:</h2>
+			<h1 className="text-2xl font-bold">Pick the AI image:</h1>
+			<p>
+				The images are devided in to 5 rows of 2 images, one of the images is real and one
+				is{" "}
+			</p>
 			{Object.entries(levels).map(([number, level]) => (
 				<div
 					key={number}
-					className={`flex flex-row gap-2 mx-auto mt-2 p-2 rounded-2xl ${answers[number as AnswerId]?.answer === null ? "border-gray-200 border-2" : answers[number as AnswerId]?.answer === true ? "border-green-600 border-2" : "border-red-600 border-2"}`}
+					className={`flex flex-row gap-2 mx-auto mt-2 p-2 rounded-3xl border-2 ${answers[number as AnswerId]?.answer === null ? "border-gray-200" : answers[number as AnswerId]?.answer === true ? "border-green-600 bg-green-950" : "border-red-600 bg-red-950"}`}
 				>
 					<Image
 						id="image 1"
@@ -92,7 +95,7 @@ export default function Home() {
 						height={400}
 						alt="ai1"
 						onClick={() => setAnswer(level.id as AnswerId, level.aiOnLeft ? true : false)}
-						className="rounded-2xl border-gray-200 border"
+						className={`rounded-2xl border-2 ${level.aiOnLeft ? (answers[number as AnswerId]?.answer === null ? "border-gray-200" : "border-green-600") : "border-gray-200"} ${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && !level.aiOnLeft ? "mix-blend-multiply" : ""}`}
 					/>
 					<Image
 						id="image"
@@ -101,7 +104,7 @@ export default function Home() {
 						height={400}
 						alt="ai2"
 						onClick={() => setAnswer(level.id as AnswerId, level.aiOnLeft ? false : true)}
-						className="rounded-2xl border-gray-200 border"
+						className={`rounded-2xl border-2 ${level.aiOnLeft ? "border-gray-200" : answers[number as AnswerId]?.answer === null ? "border-gray-200" : "border-green-600"} ${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && level.aiOnLeft ? "mix-blend-multiply" : ""}`}
 					/>
 				</div>
 			))}
