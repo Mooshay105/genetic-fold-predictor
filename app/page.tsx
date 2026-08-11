@@ -80,7 +80,7 @@ export default function Home() {
 			<h1 className="text-2xl font-bold">Pick the AI image:</h1>
 			<p>
 				The images are devided in to 5 rows of 2 images, one of the images is real and one
-				is{" "}
+				is.
 			</p>
 			{Object.entries(levels).map(([number, level]) => (
 				<div
@@ -88,7 +88,7 @@ export default function Home() {
 					className={`flex flex-row gap-2 mx-auto mt-2 p-2 rounded-3xl border-2 ${answers[number as AnswerId]?.answer === null ? "border-gray-200" : answers[number as AnswerId]?.answer === true ? "border-green-600 bg-green-950" : "border-red-600 bg-red-950"}`}
 				>
 					<div
-						className={`${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && !level.aiOnLeft ? "mix-blend-multiply" : ""}`}
+						className={`rounded-[18px] border-2 ${answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
 					>
 						<Image
 							id="image 1"
@@ -99,11 +99,11 @@ export default function Home() {
 							onClick={() =>
 								setAnswer(level.id as AnswerId, level.aiOnLeft ? true : false, true)
 							}
-							className={`rounded-2xl border-2 ${answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
+							className={`rounded-2xl ${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && !level.aiOnLeft ? "mix-blend-multiply" : ""}`}
 						/>
 					</div>
 					<div
-						className={`${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && level.aiOnLeft ? "mix-blend-multiply" : ""}`}
+						className={`rounded-[18px] border-2 ${!answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
 					>
 						<Image
 							id="image"
@@ -114,7 +114,7 @@ export default function Home() {
 							onClick={() =>
 								setAnswer(level.id as AnswerId, level.aiOnLeft ? false : true, false)
 							}
-							className={`rounded-2xl border-2 ${!answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
+							className={`rounded-2xl ${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && level.aiOnLeft ? "mix-blend-multiply" : ""}`}
 						/>
 					</div>
 				</div>
