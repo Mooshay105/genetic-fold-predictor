@@ -77,15 +77,15 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col text-center justify-center">
-			<h1 className="text-2xl font-bold">Pick the AI image:</h1>
-			<p>
+			<h1 className="text-3xl font-bold">Pick the AI image:</h1>
+			<p className="text-xl">
 				The images are devided in to 5 rows of 2 images, one of the images is real and one
 				is.
 			</p>
 			{Object.entries(levels).map(([number, level]) => (
 				<div
 					key={number}
-					className={`flex flex-row gap-2 mx-auto mt-2 p-2 rounded-3xl border-2 ${answers[number as AnswerId]?.answer === null ? "border-gray-200" : answers[number as AnswerId]?.answer === true ? "border-green-600 bg-green-950" : "border-red-600 bg-red-950"}`}
+					className={`flex flex-row gap-2 mx-auto mt-4 p-2 rounded-3xl border-2 ${answers[number as AnswerId]?.answer === null ? "border-gray-200" : answers[number as AnswerId]?.answer === true ? "border-green-600 bg-green-950" : "border-red-600 bg-red-950"}`}
 				>
 					<div
 						className={`rounded-[18px] border-2 ${answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
