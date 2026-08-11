@@ -48,31 +48,30 @@ const levels = {
 
 export default function Home() {
 	type AnswerId = "1" | "2" | "3" | "4" | "5";
-	type Answer = {
-		answer: boolean | null;
-		locked: boolean;
-	};
 
-	const [answers, setAnswers] = useState<Record<AnswerId, Answer | null>>({
-		"1": { answer: null, locked: false },
-		"2": { answer: null, locked: false },
-		"3": { answer: null, locked: false },
-		"4": { answer: null, locked: false },
-		"5": { answer: null, locked: false },
+	const [answers, setAnswers] = useState<
+		Record<
+			AnswerId,
+			{ answer: boolean | null; locked: boolean; choseLeft: boolean | null } | null
+		>
+	>({
+		"1": { answer: null, locked: false, choseLeft: null },
+		"2": { answer: null, locked: false, choseLeft: null },
+		"3": { answer: null, locked: false, choseLeft: null },
+		"4": { answer: null, locked: false, choseLeft: null },
+		"5": { answer: null, locked: false, choseLeft: null },
 	});
 	const [score, setScore] = useState(0);
 
-	function setAnswer(id: AnswerId, correct: boolean) {
+	function setAnswer(id: AnswerId, correct: boolean, left: boolean) {
 		if (answers[id]?.locked !== true) {
 			setAnswers((previous) => ({
 				...previous,
-				[id]: { answer: correct, locked: true },
+				[id]: { answer: correct, locked: true, choseLeft: left },
 			}));
 			if (correct) {
 				setScore(score + 1);
 			}
-		} else {
-			alert("You can not change your answer");
 		}
 	}
 
@@ -88,24 +87,36 @@ export default function Home() {
 					key={number}
 					className={`flex flex-row gap-2 mx-auto mt-2 p-2 rounded-3xl border-2 ${answers[number as AnswerId]?.answer === null ? "border-gray-200" : answers[number as AnswerId]?.answer === true ? "border-green-600 bg-green-950" : "border-red-600 bg-red-950"}`}
 				>
-					<Image
-						id="image 1"
-						src={level.aiOnLeft ? level.ai : level.real}
-						width={400}
-						height={400}
-						alt="ai1"
-						onClick={() => setAnswer(level.id as AnswerId, level.aiOnLeft ? true : false)}
-						className={`rounded-2xl border-2 ${level.aiOnLeft ? (answers[number as AnswerId]?.answer === null ? "border-gray-200" : "border-green-600") : "border-gray-200"} ${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && !level.aiOnLeft ? "mix-blend-multiply" : ""}`}
-					/>
-					<Image
-						id="image"
-						src={level.aiOnLeft ? level.real : level.ai}
-						width={400}
-						height={400}
-						alt="ai2"
-						onClick={() => setAnswer(level.id as AnswerId, level.aiOnLeft ? false : true)}
-						className={`rounded-2xl border-2 ${level.aiOnLeft ? "border-gray-200" : answers[number as AnswerId]?.answer === null ? "border-gray-200" : "border-green-600"} ${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && level.aiOnLeft ? "mix-blend-multiply" : ""}`}
-					/>
+					<div
+						className={`${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && !level.aiOnLeft ? "mix-blend-multiply" : ""}`}
+					>
+						<Image
+							id="image 1"
+							src={level.aiOnLeft ? level.ai : level.real}
+							width={400}
+							height={400}
+							alt="ai1"
+							onClick={() =>
+								setAnswer(level.id as AnswerId, level.aiOnLeft ? true : false, true)
+							}
+							className={`rounded-2xl border-2 ${answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
+						/>
+					</div>
+					<div
+						className={`${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && level.aiOnLeft ? "mix-blend-multiply" : ""}`}
+					>
+						<Image
+							id="image"
+							src={level.aiOnLeft ? level.real : level.ai}
+							width={400}
+							height={400}
+							alt="ai2"
+							onClick={() =>
+								setAnswer(level.id as AnswerId, level.aiOnLeft ? false : true, false)
+							}
+							className={`rounded-2xl border-2 ${!answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
+						/>
+					</div>
 				</div>
 			))}
 			<div className="fixed bottom-0 right-0 bg-[#202020] rounded-tl-2xl p-3">
