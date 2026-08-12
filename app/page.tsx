@@ -1,127 +1,101 @@
 "use client";
 
-import Image from "next/image";
-import ai1 from "../public/ai1.png";
-import ai2 from "../public/ai2.png";
-import ai3 from "../public/ai3.png";
-import ai4 from "../public/ai4.png";
-import ai5 from "../public/ai5.png";
-import real1 from "../public/real1.png";
-import real2 from "../public/real2.png";
-import real3 from "../public/real3.png";
-import real4 from "../public/real4.png";
-import real5 from "../public/real5.png";
-import { useState } from "react";
-
-const levels = {
-	"1": {
-		id: "1",
-		real: real1,
-		ai: ai1,
-		aiOnLeft: false,
-	},
-	"2": {
-		id: "2",
-		real: real2,
-		ai: ai2,
-		aiOnLeft: true,
-	},
-	"3": {
-		id: "3",
-		real: real3,
-		ai: ai3,
-		aiOnLeft: false,
-	},
-	"4": {
-		id: "4",
-		real: real4,
-		ai: ai4,
-		aiOnLeft: false,
-	},
-	"5": {
-		id: "5",
-		real: real5,
-		ai: ai5,
-		aiOnLeft: true,
-	},
-};
+import { useEffect, useRef, useState } from "react";
+import data from "../public/data.json";
+import Script from "next/script";
 
 export default function Home() {
-	type AnswerId = "1" | "2" | "3" | "4" | "5";
+	const [dna, setDNA] = useState("");
+	const [aminoAcidChain, setAminoAcidChain] = useState("");
 
-	const [answers, setAnswers] = useState<
-		Record<
-			AnswerId,
-			{ answer: boolean | null; locked: boolean; choseLeft: boolean | null } | null
-		>
-	>({
-		"1": { answer: null, locked: false, choseLeft: null },
-		"2": { answer: null, locked: false, choseLeft: null },
-		"3": { answer: null, locked: false, choseLeft: null },
-		"4": { answer: null, locked: false, choseLeft: null },
-		"5": { answer: null, locked: false, choseLeft: null },
-	});
-	const [score, setScore] = useState(0);
+	const [seq, setSeq] = useState("ISES");
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState("");
+	const viewerRef = useRef<HTMLDivElement>(null);
 
-	function setAnswer(id: AnswerId, correct: boolean, left: boolean) {
-		if (answers[id]?.locked !== true) {
-			setAnswers((previous) => ({
-				...previous,
-				[id]: { answer: correct, locked: true, choseLeft: left },
-			}));
-			if (correct) {
-				setScore(score + 1);
-			}
+	const handlePredict = async () => {
+		setError("");
+		setLoading(true);
+
+		try {
+			console.log(seq.trim());
+			const response = await fetch("https://api.esmatlas.com/foldSequence/v1/pdb/", {
+				method: "POST",
+				headers: { "Content-Type": "text/plain" },
+				body: seq.trim(),
+			});
+
+			if (!response.ok) throw new Error("Prediction failed");
+
+			const pdbData = await response.text();
+
+			if (!viewerRef.current || !window.$3Dmol) return;
+
+			viewerRef.current.innerHTML = "";
+			const viewer = window.$3Dmol.createViewer(viewerRef.current, {
+				backgroundColor: "white",
+			});
+
+			viewer.addModel(pdbData, "pdb");
+			viewer.setStyle({}, { cartoon: { color: "spectrum" } });
+			viewer.zoomTo();
+			viewer.render();
+		} catch (err) {
+			setError("Could not predict structure. Sequence may be too short/invalid.");
+		} finally {
+			setLoading(false);
 		}
-	}
+	};
+
+	useEffect(() => {
+		const splitBaseTriplets: string[] =
+			dna
+				.replaceAll(" ", "")
+				.toUpperCase()
+				.match(/.{1,3}/g) || [];
+		let protoAminoAcidChain = "";
+		let protoAminoCodeChain = "";
+		splitBaseTriplets.map((baseTriplet) => {
+			const aminoAcid = data[baseTriplet as keyof typeof data]?.acid;
+			const aminoCode = data[baseTriplet as keyof typeof data]?.code;
+			if (aminoAcid !== undefined) {
+				protoAminoAcidChain = protoAminoAcidChain + " " + aminoAcid;
+				protoAminoCodeChain = protoAminoCodeChain + aminoCode;
+			}
+		});
+		setAminoAcidChain(protoAminoAcidChain);
+		setSeq(protoAminoCodeChain);
+	}, [dna]);
 
 	return (
 		<div className="flex flex-col text-center justify-center">
-			<h1 className="text-3xl font-bold">Pick the AI image:</h1>
-			<p className="text-xl">
-				The images are devided in to 5 rows of 2 images, one of the images is real and one
-				is.
-			</p>
-			{Object.entries(levels).map(([number, level]) => (
-				<div
-					key={number}
-					className={`flex flex-row gap-2 mx-auto mt-4 p-2 rounded-3xl border-2 ${answers[number as AnswerId]?.answer === null ? "border-gray-200" : answers[number as AnswerId]?.answer === true ? "border-green-600 bg-green-950" : "border-red-600 bg-red-950"}`}
-				>
-					<div
-						className={`rounded-[18px] border-2 ${answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
-					>
-						<Image
-							id="image 1"
-							src={level.aiOnLeft ? level.ai : level.real}
-							width={400}
-							height={400}
-							alt="ai1"
-							onClick={() =>
-								setAnswer(level.id as AnswerId, level.aiOnLeft ? true : false, true)
-							}
-							className={`rounded-2xl ${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && !level.aiOnLeft ? "mix-blend-multiply" : ""}`}
-						/>
-					</div>
-					<div
-						className={`rounded-[18px] border-2 ${!answers[number as AnswerId]?.choseLeft && answers[number as AnswerId]?.locked ? "border-blue-600" : "border-gray-200"}`}
-					>
-						<Image
-							id="image"
-							src={level.aiOnLeft ? level.real : level.ai}
-							width={400}
-							height={400}
-							alt="ai2"
-							onClick={() =>
-								setAnswer(level.id as AnswerId, level.aiOnLeft ? false : true, false)
-							}
-							className={`rounded-2xl ${(answers[number as AnswerId]?.answer === true || answers[number as AnswerId]?.answer === false) && level.aiOnLeft ? "mix-blend-multiply" : ""}`}
-						/>
-					</div>
-				</div>
-			))}
-			<div className="fixed bottom-0 right-0 bg-[#202020] rounded-tl-2xl p-3">
-				<p>Score: {score}/5</p>
-			</div>
+			<Script src="https://3Dmol.org/build/3Dmol-min.js" strategy="beforeInteractive" />
+			<h1 className="text-3xl font-bold">Enter The DNA Sequence:</h1>
+			<input
+				id="dnaSequence"
+				type="text"
+				value={dna}
+				onChange={(event) => setDNA(event.target.value)}
+				placeholder="ATC TCC TAG"
+				className="border border-white w-200 mx-auto rounded px-2"
+			/>
+			<h1 className="text-3xl font-bold">Amino Acid Chain:</h1>
+			<p className="border border-white w-200 mx-auto rounded px-2">{aminoAcidChain}</p>
+			<button
+				onClick={handlePredict}
+				disabled={loading}
+				className="border border-white mx-auto rounded px-2 mt-2"
+			>
+				{loading ? "Predicting..." : "Predict & Render"}
+			</button>
+
+			{error && <p style={{ color: "red" }}>{error}</p>}
+
+			<div
+				ref={viewerRef}
+				style={{ width: 600, height: 400, position: "relative", marginTop: 20 }}
+				className="w-150 h-100 relative mt-5 rounded-2xl mx-auto"
+			/>
 		</div>
 	);
 }

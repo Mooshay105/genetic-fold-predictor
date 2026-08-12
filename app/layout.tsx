@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./styles.css";
 
 export const metadata: Metadata = {
-	title: "Malcolm's 56DIGI Website",
+	title: "DNA Example",
 };
 
 export default function RootLayout({
