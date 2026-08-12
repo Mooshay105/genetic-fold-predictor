@@ -18,14 +18,16 @@ export default function Home() {
 		setLoading(true);
 
 		try {
-			console.log(singleLetterAminoAcidChain.trim());
 			const response = await fetch("https://api.esmatlas.com/foldSequence/v1/pdb/", {
 				method: "POST",
 				headers: { "Content-Type": "text/plain" },
 				body: singleLetterAminoAcidChain.trim(),
 			});
 
-			if (!response.ok) throw new Error("Prediction failed");
+			if (!response.ok) {
+				console.log(response);
+				throw new Error("Prediction failed");
+			}
 
 			const pdbData = await response.text();
 
