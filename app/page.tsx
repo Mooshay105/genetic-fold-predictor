@@ -7,8 +7,8 @@ import Script from "next/script";
 export default function Home() {
 	const [dna, setDNA] = useState("");
 	const [aminoAcidChain, setAminoAcidChain] = useState("");
+	const [singleLetterAminoAcidChain, setSingleLetterAminoAcidChain] = useState("");
 
-	const [seq, setSeq] = useState("ISES");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const viewerRef = useRef<HTMLDivElement>(null);
@@ -18,11 +18,11 @@ export default function Home() {
 		setLoading(true);
 
 		try {
-			console.log(seq.trim());
+			console.log(singleLetterAminoAcidChain.trim());
 			const response = await fetch("https://api.esmatlas.com/foldSequence/v1/pdb/", {
 				method: "POST",
 				headers: { "Content-Type": "text/plain" },
-				body: seq.trim(),
+				body: singleLetterAminoAcidChain.trim(),
 			});
 
 			if (!response.ok) throw new Error("Prediction failed");
@@ -63,39 +63,47 @@ export default function Home() {
 				protoAminoCodeChain = protoAminoCodeChain + aminoCode;
 			}
 		});
-		setAminoAcidChain(protoAminoAcidChain);
-		setSeq(protoAminoCodeChain);
+		setAminoAcidChain(protoAminoAcidChain.trim());
+		setSingleLetterAminoAcidChain(protoAminoCodeChain);
 	}, [dna]);
 
 	return (
 		<div className="flex flex-col text-center justify-center">
-			<Script src="https://3Dmol.org/build/3Dmol-min.js" strategy="beforeInteractive" />
-			<h1 className="text-3xl font-bold">Enter The DNA Sequence:</h1>
-			<input
-				id="dnaSequence"
-				type="text"
-				value={dna}
-				onChange={(event) => setDNA(event.target.value)}
-				placeholder="ATC TCC TAG"
-				className="border border-white w-200 mx-auto rounded px-2"
-			/>
-			<h1 className="text-3xl font-bold">Amino Acid Chain:</h1>
-			<p className="border border-white w-200 mx-auto rounded px-2">{aminoAcidChain}</p>
-			<button
-				onClick={handlePredict}
-				disabled={loading}
-				className="border border-white mx-auto rounded px-2 mt-2"
-			>
-				{loading ? "Predicting..." : "Predict & Render"}
-			</button>
-
-			{error && <p style={{ color: "red" }}>{error}</p>}
-
-			<div
-				ref={viewerRef}
-				style={{ width: 600, height: 400, position: "relative", marginTop: 20 }}
-				className="w-150 h-100 relative mt-5 rounded-2xl mx-auto"
-			/>
+			<div className="fixed top-0 left-0 w-1/3 h-full border-r-2 border-amber-50 p-2">
+				<Script src="https://3Dmol.org/build/3Dmol-min.js" strategy="beforeInteractive" />
+				<h1 className="text-3xl font-bold">Enter The DNA Sequence:</h1>
+				<input
+					id="dnaSequence"
+					type="text"
+					value={dna}
+					onChange={(event) => setDNA(event.target.value)}
+					placeholder="ATC TCC GAG TCG TAG"
+					className="border border-white w-full mx-auto rounded px-2"
+				/>
+				<h1 className="text-3xl font-bold">Amino Acid Chain:</h1>
+				<h2 className="text-2xl font-bold">Amino Acid Code:</h2>
+				<p className="border border-white w-full mx-auto rounded px-2 text-left">
+					{aminoAcidChain}
+				</p>
+				<h2 className="text-2xl font-bold">Single Letter Amino Acid Code:</h2>
+				<input
+					id="singleLetterAminoAcidChain"
+					type="text"
+					value={singleLetterAminoAcidChain.trim()}
+					onChange={(event) => setSingleLetterAminoAcidChain(event.target.value)}
+					placeholder="ISES"
+					className="border border-white w-full mx-auto rounded px-2"
+				/>
+				<button
+					onClick={handlePredict}
+					disabled={loading}
+					className="border border-white mx-auto rounded px-2 mt-2"
+				>
+					{loading ? "Predicting..." : "Predict & Render"}
+				</button>
+				{error && <p style={{ color: "red" }}>{error}</p>}
+			</div>
+			<div ref={viewerRef} className="fixed right-0 top-0 w-2/3 h-full" />
 		</div>
 	);
 }
