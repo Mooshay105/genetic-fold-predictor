@@ -12,6 +12,8 @@ export default function Home() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const viewerRef = useRef<HTMLDivElement>(null);
+	const skipCodeNextRef = useRef(false);
+	const skipDNANextRef = useRef(false);
 
 	async function handlePredict() {
 		setError("");
@@ -50,6 +52,10 @@ export default function Home() {
 	}
 
 	useEffect(() => {
+		if (skipDNANextRef.current === true) {
+			skipDNANextRef.current = false;
+			return;
+		}
 		const splitBaseTriplets: string[] =
 			dna
 				.replaceAll(" ", "")
@@ -58,16 +64,39 @@ export default function Home() {
 		let protoAminoAcidChain = "";
 		let protoAminoCodeChain = "";
 		splitBaseTriplets.map((baseTriplet) => {
-			const aminoAcid = data[baseTriplet as keyof typeof data]?.acid;
-			const aminoCode = data[baseTriplet as keyof typeof data]?.code;
+			const aminoAcid = data.dna[baseTriplet as keyof typeof data.dna]?.acid;
+			const aminoCode = data.dna[baseTriplet as keyof typeof data.dna]?.code;
 			if (aminoAcid !== undefined) {
 				protoAminoAcidChain = protoAminoAcidChain + " " + aminoAcid;
 				protoAminoCodeChain = protoAminoCodeChain + aminoCode;
 			}
 		});
+		skipCodeNextRef.current = true;
 		setAminoAcidChain(protoAminoAcidChain.trim());
 		setSingleLetterAminoAcidChain(protoAminoCodeChain);
 	}, [dna]);
+
+	useEffect(() => {
+		if (skipCodeNextRef.current === true) {
+			skipCodeNextRef.current = false;
+			return;
+		}
+		skipDNANextRef.current = true;
+		setDNA("");
+		const splitAcids: string[] =
+			singleLetterAminoAcidChain
+				.replaceAll(" ", "")
+				.toUpperCase()
+				.match(/.{1,1}/g) || [];
+		let protoAminoAcidChain = "";
+		splitAcids.map((acid) => {
+			const aminoAcid = data.code[acid as keyof typeof data.code]?.acid;
+			if (aminoAcid !== undefined) {
+				protoAminoAcidChain = protoAminoAcidChain + " " + aminoAcid;
+			}
+		});
+		setAminoAcidChain(protoAminoAcidChain.trim());
+	}, [singleLetterAminoAcidChain]);
 
 	return (
 		<div className="flex flex-col text-center justify-center">
