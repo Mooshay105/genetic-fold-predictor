@@ -37,7 +37,7 @@ export default function Home() {
 
 			viewerRef.current.innerHTML = "";
 			const viewer = window.$3Dmol.createViewer(viewerRef.current, {
-				backgroundColor: "white",
+				backgroundColor: "#121212",
 			});
 
 			viewer.addModel(pdbData, "pdb");
@@ -100,7 +100,7 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col text-center justify-center">
-			<div className="fixed top-0 left-0 w-1/3 h-full border-r-2 border-amber-50 p-2 flex flex-col justify-between overflow-scroll">
+			<div className="fixed top-0 left-0 w-1/3 h-full border-r-2 border-amber-50 bg-[#121212] p-2 flex flex-col justify-between overflow-scroll rounded-2xl">
 				<div>
 					<Script
 						src="https://3Dmol.org/build/3Dmol-min.js"
@@ -144,7 +144,12 @@ export default function Home() {
 					</p>
 				</div>
 			</div>
-			<div ref={viewerRef} className="fixed right-0 top-0 w-2/3 h-full" />
+			<div
+				ref={viewerRef}
+				className="fixed right-0 top-0 w-2/3 h-full flex justify-center items-center"
+			>
+				<h1 className="text-[#3d3d3d] text-2xl">Protein Will Appear Here.</h1>
+			</div>
 		</div>
 	);
 }
