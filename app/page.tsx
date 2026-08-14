@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import data from "../public/data.json";
+import codonTable from "../public/codon-table.json";
+import proteinPresets from "../public/protein-presets.json";
 import Script from "next/script";
+import { getProteinPDBData } from "@/utils/actions";
 
 export default function Home() {
 	const [dna, setDNA] = useState("");
@@ -14,6 +16,7 @@ export default function Home() {
 	const [pdb, setPDB] = useState<string | null>(null);
 	const [viewer, setViewer] = useState<Mol3DViewer>();
 	const [name, setName] = useState<string>("protein");
+	const [shouldShowPresetSelector, showPresetSelector] = useState(false);
 	const viewerRef = useRef<HTMLDivElement>(null);
 	const skipCodeNextRef = useRef(false);
 	const skipDNANextRef = useRef(false);
@@ -46,18 +49,7 @@ export default function Home() {
 		setLoading(true);
 
 		try {
-			const response = await fetch("https://api.esmatlas.com/foldSequence/v1/pdb/", {
-				method: "POST",
-				headers: { "Content-Type": "text/plain" },
-				body: singleLetterAminoAcidChain.trim(),
-			});
-
-			if (!response.ok) {
-				console.log(response);
-				throw new Error("Prediction failed");
-			}
-
-			const pdbData = await response.text();
+			const pdbData = await getProteinPDBData(singleLetterAminoAcidChain);
 
 			if (!viewerRef.current || !window.$3Dmol) return;
 
@@ -94,8 +86,8 @@ export default function Home() {
 		let protoAminoAcidChain = "";
 		let protoAminoCodeChain = "";
 		splitBaseTriplets.forEach((baseTriplet) => {
-			const aminoAcid = data.dna[baseTriplet as keyof typeof data.dna]?.acid;
-			const aminoCode = data.dna[baseTriplet as keyof typeof data.dna]?.code;
+			const aminoAcid = codonTable.dna[baseTriplet as keyof typeof codonTable.dna]?.acid;
+			const aminoCode = codonTable.dna[baseTriplet as keyof typeof codonTable.dna]?.code;
 			if (aminoAcid !== undefined) {
 				protoAminoAcidChain = protoAminoAcidChain + " " + aminoAcid;
 				protoAminoCodeChain = protoAminoCodeChain + aminoCode;
@@ -120,7 +112,7 @@ export default function Home() {
 				.match(/.{1,1}/g) || [];
 		let protoAminoAcidChain = "";
 		splitAcids.forEach((acid) => {
-			const aminoAcid = data.code[acid as keyof typeof data.code]?.acid;
+			const aminoAcid = codonTable.code[acid as keyof typeof codonTable.code]?.acid;
 			if (aminoAcid !== undefined) {
 				protoAminoAcidChain = protoAminoAcidChain + " " + aminoAcid;
 			}
@@ -149,19 +141,30 @@ export default function Home() {
 					<h1 className="text-2xl font-bold">
 						Single Letter Amino Acid Code (Max 400 amino acids):
 					</h1>
-					<input
-						id="singleLetterAminoAcidChain"
-						type="text"
-						value={singleLetterAminoAcidChain.trim()}
-						onChange={(event) => setSingleLetterAminoAcidChain(event.target.value)}
-						placeholder="ISES"
-						maxLength={400}
-						className="border border-white w-full mx-auto rounded px-2"
-					/>
+					<div className="flex flex-row gap-2">
+						<input
+							id="singleLetterAminoAcidChain"
+							type="text"
+							value={singleLetterAminoAcidChain.trim()}
+							onChange={(event) => setSingleLetterAminoAcidChain(event.target.value)}
+							placeholder="ISES"
+							maxLength={400}
+							className="border border-white w-full mx-auto rounded px-2"
+						/>
+						<button
+							onClick={() => {
+								showPresetSelector(true);
+							}}
+							disabled={loading}
+							className="border border-white mx-auto rounded px-2 whitespace-nowrap"
+						>
+							Load Protein
+						</button>
+					</div>
 					<button
 						onClick={handlePredict}
 						disabled={loading}
-						className="border border-white mx-auto rounded px-2 mt-2"
+						className="border border-white mx-auto rounded px-2 mt-4"
 					>
 						{loading ? "Predicting..." : "Predict & Render"}
 					</button>
@@ -203,6 +206,55 @@ export default function Home() {
 					Download PDB
 				</button>
 			</div>
+			{shouldShowPresetSelector ? (
+				<div className="fixed inset-0 flex items-center justify-center">
+					<div className="border-2 border-amber-50 bg-[#121212] p-2 rounded-2xl max-h-2/3 overflow-scroll text-left">
+						<div className="flex flex-row justify-between">
+							<h1 className="text-xl font-bold">Protein Preset Selector</h1>
+							<svg
+								width="25"
+								height="25"
+								viewBox="0 0 100 100"
+								xmlns="http://www.w3.org/2000/svg"
+								onClick={() => showPresetSelector(false)}
+							>
+								<line
+									x1="20"
+									y1="20"
+									x2="80"
+									y2="80"
+									stroke="white"
+									strokeWidth="10"
+									strokeLinecap="round"
+								/>
+								<line
+									x1="80"
+									y1="20"
+									x2="20"
+									y2="80"
+									stroke="white"
+									strokeWidth="10"
+									strokeLinecap="round"
+								/>
+							</svg>
+						</div>
+						<ul>
+							{proteinPresets.map((preset) => (
+								<li
+									key={preset.singleLetterAminoAcidChain}
+									onClick={() => {
+										setSingleLetterAminoAcidChain(preset.singleLetterAminoAcidChain);
+										showPresetSelector(false);
+										setName(preset.name);
+									}}
+								>
+									{preset.name}
+								</li>
+							))}
+						</ul>
+					</div>
+				</div>
+			) : null}
 		</div>
 	);
 }
