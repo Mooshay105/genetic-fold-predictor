@@ -130,7 +130,7 @@ export default function Home() {
 						src="https://3Dmol.org/build/3Dmol-min.js"
 						strategy="beforeInteractive"
 					/>
-					<h1 className="text-2xl font-bold">DNA Sequence:</h1>
+					<h1 className="text-2xl font-bold">DNA/RNA Sequence:</h1>
 					<input
 						id="dnaSequence"
 						type="text"
