@@ -81,6 +81,8 @@ export default function Home() {
 		const splitBaseTriplets: string[] =
 			dna
 				.replaceAll(" ", "")
+				.replaceAll("U", "T")
+				.replaceAll("u", "t")
 				.toUpperCase()
 				.match(/.{1,3}/g) || [];
 		let protoAminoAcidChain = "";
