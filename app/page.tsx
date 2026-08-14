@@ -130,19 +130,16 @@ export default function Home() {
 						src="https://3Dmol.org/build/3Dmol-min.js"
 						strategy="beforeInteractive"
 					/>
-					<h1 className="text-2xl font-bold">DNA Sequence (Max 1200 base pairs):</h1>
+					<h1 className="text-2xl font-bold">DNA Sequence:</h1>
 					<input
 						id="dnaSequence"
 						type="text"
 						value={dna}
 						onChange={(event) => setDNA(event.target.value)}
 						placeholder="ATC TCC GAG TCG TAG"
-						maxLength={1600}
 						className="border border-white w-full mx-auto rounded px-2"
 					/>
-					<h1 className="text-2xl font-bold">
-						Single Letter Amino Acid Code (Max 400 amino acids):
-					</h1>
+					<h1 className="text-2xl font-bold">Single Letter Amino Acid Code:</h1>
 					<div className="flex flex-row gap-2">
 						<input
 							id="singleLetterAminoAcidChain"
@@ -150,7 +147,6 @@ export default function Home() {
 							value={singleLetterAminoAcidChain.trim()}
 							onChange={(event) => setSingleLetterAminoAcidChain(event.target.value)}
 							placeholder="ISES"
-							maxLength={400}
 							className="border border-white w-full mx-auto rounded px-2"
 						/>
 						<button
@@ -192,7 +188,6 @@ export default function Home() {
 					value={name}
 					onChange={(event) => setName(event.target.value)}
 					placeholder="protein"
-					maxLength={400}
 					className="border border-white w-full mx-auto rounded px-2"
 				/>
 				<button
