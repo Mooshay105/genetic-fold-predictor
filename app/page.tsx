@@ -124,7 +124,7 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col text-center justify-center">
-			<div className="fixed top-0 left-0 w-1/3 h-full border-r-2 border-t-2 border-amber-50 bg-[#121212] p-2 flex flex-col justify-between overflow-scroll rounded-tr-2xl">
+			<div className="fixed top-0 left-0 w-1/3 h-full border-r-2 border-t-2 border-amber-50 bg-background p-2 flex flex-col justify-between overflow-scroll rounded-tr-2xl">
 				<div>
 					<Script
 						src="https://3Dmol.org/build/3Dmol-min.js"
@@ -181,7 +181,7 @@ export default function Home() {
 			>
 				<h1 className="text-[#3d3d3d] text-2xl">Protein Will Appear Here.</h1>
 			</div>
-			<div className="flex flex-row gap-2 items-center fixed bottom-0 right-0 w-2/3 h-15 border-t-2 border-r-2 border-amber-50 bg-[#121212] p-2 rounded-tr-2xl">
+			<div className="flex flex-row gap-2 items-center fixed bottom-0 right-0 w-2/3 h-15 border-t-2 border-r-2 border-amber-50 bg-background p-2 rounded-tr-2xl">
 				<input
 					id="name"
 					type="text"
@@ -191,21 +191,24 @@ export default function Home() {
 					className="border border-white w-full mx-auto rounded px-2"
 				/>
 				<button
-					className={`border ${viewer !== undefined ? "border-amber-50 bg-[#3d3d3d]" : "border-amber-50/25 bg-[#3d3d3d]/25 text-[#ededed]/25"} rounded w-min h-min whitespace-nowrap px-2`}
+					className={`border ${viewer !== undefined ? "border-amber-50 bg-[#3d3d3d]" : "border-amber-50/25 bg-[#3d3d3d]/25 text-font-color/25"} rounded w-min h-min whitespace-nowrap px-2`}
 					onClick={downloadImg}
 				>
 					Download PNG
 				</button>
 				<button
-					className={`border ${viewer !== undefined ? "border-amber-50 bg-[#3d3d3d]" : "border-amber-50/25 bg-[#3d3d3d]/25 text-[#ededed]/25"} rounded w-min h-min whitespace-nowrap px-2`}
+					className={`border ${viewer !== undefined ? "border-amber-50 bg-[#3d3d3d]" : "border-amber-50/25 bg-[#3d3d3d]/25 text-font-color/25"} rounded w-min h-min whitespace-nowrap px-2`}
 					onClick={downloadPDB}
 				>
 					Download PDB
 				</button>
+				<a href="/credits" className="underline">
+					Credits
+				</a>
 			</div>
 			{shouldShowPresetSelector ? (
 				<div className="fixed inset-0 flex items-center justify-center">
-					<div className="border-2 border-amber-50 bg-[#121212] p-2 rounded-2xl max-h-2/3 overflow-scroll text-left">
+					<div className="border-2 border-amber-50 bg-background p-2 rounded-2xl max-h-2/3 overflow-scroll text-left">
 						<div className="flex flex-row justify-between">
 							<h1 className="text-xl font-bold">Protein Preset Selector</h1>
 							<svg

@@ -3,3 +3,9 @@
 body {
 	font-family: "Comic Neue", cursive;
 }
+
+@theme {
+	--color-background: #121212;
+	--color-font-color: #ededed;
+	--color-secondary-font-color: #b3b3b3;
+}
