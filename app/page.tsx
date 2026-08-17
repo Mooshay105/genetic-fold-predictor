@@ -66,7 +66,7 @@ export default function Home() {
 			setViewer(viewer);
 		} catch (err) {
 			setError(
-				"Oops! The service could not predict the proteins structure! It might be too short/invalid. Or there is just a one off error, so please try again.",
+				"Oops! The service could not predict the proteins structure! It might be too long/invalid. Or there is just a one off error, so please try again.",
 			);
 		} finally {
 			setLoading(false);
