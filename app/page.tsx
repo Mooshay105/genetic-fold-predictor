@@ -161,12 +161,17 @@ export default function Home() {
 					</div>
 					<button
 						onClick={handlePredict}
-						disabled={loading}
+						//disabled={loading}
+						disabled={true}
 						className="border border-white mx-auto rounded px-2 mt-4"
 					>
 						{loading ? "Predicting..." : "Predict & Render"}
 					</button>
 					{error && <p style={{ color: "red" }}>{error}</p>}
+					<p style={{ color: "red" }}>
+						ESMFold has been deprecated. We are moving to other models. Sorry for the
+						inconvenience.
+					</p>
 				</div>
 				<div className="">
 					<h2 className="text-2xl font-bold">Amino Acid Code:</h2>
