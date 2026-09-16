@@ -30,8 +30,10 @@ export default function Credits() {
 			<h2 className="text-xl font-bold mt-2">Predictor:</h2>
 			<div className="flex flex-row text-center gap-8">
 				<div className="flex flex-col">
-					<p className="font-bold">ESM Fold</p>
-					<p className="text-secondary-font-color">By Meta</p>
+					<p className="font-bold">OpenFold</p>
+					<p className="text-secondary-font-color">
+						By AlQuraishi Lab at Columbia University
+					</p>
 				</div>
 				<div className="flex flex-col">
 					<p className="font-bold">NVIDIA BioNeMo</p>
