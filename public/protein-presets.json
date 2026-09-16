@@ -1,230 +1,322 @@
 [
 	{
+		"name": "DNA Example",
+		"multipleSingleLetterAminoAcidChains": true,
+		"singleLetterAminoAcidChains": ["AGGAACACGTGACCC", "TGGGTCACGTGTTCC"],
+		"link": "https://build.nvidia.com/openfold/openfold3?snippet_tab=Shell",
+		"from": "Nvidia Example",
+		"type": "dna"
+	},
+	{
+		"name": "Protien Example",
+		"multipleSingleLetterAminoAcidChains": false,
+		"singleLetterAminoAcidChain": "MGREEPLNHVEAERQRREKLNQRFYALRAVVPNVSKMDKASLLGDAIAYINELKSKVVKTESEKLQIKNQLEEVKLELAGRLEHHHHHH",
+		"link": "https://build.nvidia.com/openfold/openfold3?snippet_tab=Shell",
+		"from": "Nvidia Example",
+		"type": "protein"
+	},
+	{
 		"name": "Homo Sapiens: C1QA",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MEGPRGWLVLCVLAISLASMVTEDLCRAPDGKKGEAGRPGRRGRPGLKGEQGEPGAPGIRTGIQGLKGDQGEPGPSGNPGKVGYPGPSGPLGARGIPGIKGTKGSPGNIKDQPRPAFSAIRRNPPMGGNVVIFDTVITNQEEPYQNHSGRFVCTVPGYYYFTFQVLSQWEICLSIVSSSRGQVRRSLGFCDTTNKGLFQVVSGGMVLQLQQGDQVWVEKDPKKGHIYQGSEADSVFSGFLIFPSA",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/NM_015991",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: C1QB",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MMMKIPWGSIPVLMLLLLLGLIDISQAQLSCTGPPAIPGIPGIPGTPGPDGQPGTPGIKGEKGLPGLAGDHGEFGEKGDPGIPGNPGKVGPKGPMGPKGGPGAPGAPGPKGESGDYKATQKIAFSATRTINVPLRRDQTIRFDHVITNMNNNYEPRSGKFTCKVPGLYYFTYHASSRGNLCVNLMRGRERAQKVVTFCDYAYNTFQVTTGGMVLKLEQGENVFLQATDKNSLLGMEGANSIFSGFLLFPDMEA",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000491",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: C1QC",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MDVGPSSLPHLGLKLLLLLLLLPLRGQANTGCYGIPGMPGLPGAPGKDGYDGLPGPKGEPGIPAIPGIRGPKGQKGEPGLPGHPGKNGPMGPPGMPGVPGPMGIPGEPGEEGRYKQKFQSVFTVTRQTHQPPAPNSLIRFNAVLTNPQGDYDTSTGKFTCKVPGLYYFVYHASHTANLCVLLYRSGVKVVTFCGHTSKTNQVNSGGVLLRLQVGEEVWLAVNDYYDMVGIQGSDSVFSGFLLFPD",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001114101",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: Insulin",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MALWMRLLPLLALLALWGPDPAAAFVNQHLCGSHLVEALYLVCGERGFFYTPKTRREAEDLQVGQVELGGGPGAGSLQPLALEGSLQKRGIVEQCCTSICSLYQLENYCN",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000207",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: Ubiquitin B",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGGMQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGGMQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGGC",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/NM_018955",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: Cytochrome C",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MGDVEKGKKIFIMKCSQCHTVEKGGKHKTGPNLHGLFGRKTGQAPGYSYTAANKNKGIIWGEDTLMEYLENPKKYIPGTKMIFVGIKKKEERADLIAYLKKATNE",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/NM_018947",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: Lysozyme",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MKALIVLGLVLLSVTVQGKVFERCELARTLKRLGMDGYRGISLANWMCLAKWESGYNTRATNYNAGDRSTDYGIFQINSRYWCNDGKTPGAVNACHLSCSALLQDNIADAVACAKRVVRDPQGIRAWVAWRNRCQNRDVRQYVQGCGV",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000239",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: Early Growth Response 1",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MAAAKAEMQLMSPLQISDPFGSFPHSPTMDNYPKLEEMMLLSNGAPQFLGAAGAPEGSGSNSSSSSSGGGGGGGGGSNSSSSSSTFNPQADTGEQPYEHLTAESFPDISLNNEKVLVETSYPSQTTRLPPITYTGRFSLEPAPNSGNTLWPEPLFSLVSGLVSMTNPPASSSSAPSPAASSASASQSPPLSCAVPSNDSSPIYSAAPTFPTPNTDIFPEPQSQAFPGSAGTALQYPPPAYPAAKGGFQVPMIPDYLFPQQQGDLGLGTPDQKPFQGLESRTQQPSLTPLSTIKAFATQSGSQDLKALNTSYQSQLIKPSRMRKYPNRPSKTPPHERPYACPVESCDRRFSRSDELTRHIRIHTGQKPFQCRICMRNFSRSDHLTTHIRTHTGEKPFACDICGRKFARSDERKRHTKIHLRQKDKKADKSVVASSATSSLSSYPSPVATSYPSPVTTSYPSPATTSYPSPVPTSFSSPGSSTYPSPVHSGFPSPSVATTYSSVPPAFPAQVSSFPSSAVTNSFSASTGLSDMTATFSPRTIEIC",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001964",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: Serotonin Receptor",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MDILCEENTSLSSTTNSLMQLNDDTRLYSNDFNSGEANTSDAFNWTVDSENRTNLSCEGCLSPSCLSLLHLQEKNWSALLTAVVIILTIAGNILVIMAVSLEKKLQNATNYFLMSLAIADMLLGFLVMPVSMLTILYGYRWPLPSKLCAVWIYLDVLFSTASIMHLCAISLDRYVAIQNPIHHSRFNSRTKAFLKIIAVWTISVGISMPIPVFGLQDDSKVFKEGSCLLADDNFVLIGSFVSFFIPLTIMVITYFLTIKSLQKEATLCVSDLGTRAKLASFSFLPQSSLSSEKLFQRSIHREPGSYTGRRTMQSISNEQKACKVLGIVFFLFVVMWCPFFITNIMAVICKESCNEDVIGALLNVFVWIGYLSSAVNPLVYTLFNKTYRSAFSRYIQCQYKENKKPLQLILVNTIPALAYKSSQLQMGQKKNSKQDAKTTDNDCSMVALGKQHSEEASKDNSDGVNEKVSCV",
 		"link": "https://www.uniprot.org/uniprotkb/P28223/entry",
-		"from": "UniProt"
+		"from": "UniProt",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: Cereblon",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MAGEGDQQDAAHNMGNHLPLLPAESEEEDEMEVEDQDSKEAKKPNIINFDTSLPTSHTYLGADMEEFHGRTLHDDDSCQVIPVLPQVMMILIPGQTLPLQLFHPQEVSMVRNLIQKDRTFAVLAYSNVQEREAQFGTTAEIYAYREEQDFGIEIVKVKAIGRQRFKVLELRTQSDGIQQAKVQILPECVLPSTMSAVQLESLNKCQIFPSKPVSREDQCSYKWWQKYQKRKFHCANLTSWPRWLYSLYDAETLMDRIKKQLREWDENLKDDSLPSNPIDFSYRVAACLPIDDVLRIQLLKIGSAIQRLRCELDIMNKCTSLCCKQCQETEITTKNEIFSLSLCGPMAAYVNPHGYVHETLTVYKACNLNLIGRPSTEHSWFPGYAWTVAQCKICASHIGWKFTATKKDMSPQKFWGLTRSALLPTIPDTEDEISPDKVILCL",
 		"link": "https://www.uniprot.org/uniprotkb/Q96SW2/entry",
-		"from": "UniProt"
+		"from": "UniProt",
+		"type": "protein"
 	},
 	{
 		"name": "Homo Sapiens: Human Prion Protein",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "KKRPKPGGWNTGGSRYPGQGSPGGNRYPPQGGGGWGQPHGGGWGQPHGGGWGQPHGGGWGQPHGGGWGQGGGTHSQWNKPSKPKTNMKHMAGAAAAGAVVGGLGGYMLGSAMSRPIIHFGSDYEDRYYRENMHRYPNQVYYRPMDEYSNQNNFVHDCVNITIKQHTVTTTTKGENFTETDVKMMERVVEQMCITQYERESQAYYQRGSSMVLF",
 		"link": "https://www.uniprot.org/uniprotkb/P04156/entry",
-		"from": "UniProt"
+		"from": "UniProt",
+		"type": "protein"
 	},
 	{
 		"name": "Derived from Aequorea Victoria: Green Fluorescent Protein",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFGYGVQCFARYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSALSKDPNEKRDHMVLLEFVTAAGITHGMDELYK",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/U73901",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Photinus Pyralis: Luciferase Gene",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MEDAKNIKKGPAPFYPLEDGTAGEQLHKAMKRYALVPGTIAFTDAHIEVNITYAEYFEMSVRLAEAMKRYGLNTNHRIVVCSENSLQFFMPVLGALFIGVAVAPANDIYNERELLNSMNISQPTVVFVSKKGLQKILNVQKKLPIIQKIIIMDSKTDYQGFQSMYTFVTSHLPPGFNEYDFVPESFDRDKTIALIMNSSGSTGLPKGVALPHRTACVRFSHARDPIFGNQIIPDTAILSVVPFHHGFGMFTTLGYLICGFRVVLMYRFEEELFLRSLQDYKIQSALLVPTLFSFFAKSTLIDKYDLSNLHEIASGGAPLSKEVGEAVAKRFHLPGIRQGYGLTETTSAILITPEGDDKPGAVGKVVPFFEAKVVDLDTGKTLGVNQRGELCVRGPMIMSGYVNNPEATNALIDKDGWLHSGDIAYWDEDEHFFIVDRLKSLIKYKGYQVAPAELESILLQHPNIFDAGVAGLPDDDAGELPAAVVVLEHGKTMTEKEIVDYVASQVTTAKKLRGGVVFVDEVPKGLTGKLDARKIREILIKAKKGGKSKL",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/M15077",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Araneus Diadematus: Fibroin 3",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "ARAGSGQQGPGQQGPGQQGPGQQGPYGPGASAAAAAAGGYGPGSGQQGPSQQGPGQQGPGGQGPYGPGASAAAAAAGGYGPGSGQQGPGGQGPYGPGSSAAAAAAGGNGPGSGQQGAGQQGPGQQGPGASAAAAAAGGYGPGSGQQGPGQQGPGGQGPYGPGASAAAAAAGGYGPGSGQGPGQQGPGGQGPYGPGASAAAAAAGGYGPGSGQQGPGQQGPGQQGPGGQGPYGPGASAAAAAAGGYGPGYGQQGPGQQGPGGQGPYGPGASAASAASGGYGPGSGQQGPGQQGPGGQGPYGPGASAAAAAAGGYGPGSGQQGPGQQGPGQQGPGQQGPGGQGPYGPGASAAAAAAGGYGPGSGQQGPGQQGPGQQGPGQQGPGQQGPGQQGPGQQGPGQQGPGQQGPGGQGAYGPGASAAAGAAGGYGPGSGQQGPGQQGPGQQGPGQQGPGQQGPGQQGPGQQGPGQQGPYGPGASAAAAAAGGYGPGSGQQGPGQQGPGQQGPGGQGPYGPGAASAAVSVGGYGPQSSSVPVASAVASRLSSPAASSRVSSAVSSLVSSGPTKHAALSNTISSVVSQVSASNPGLSGCDVLVQALLEVVSALVSILGSSSIGQINYGASAQYTQMVGQSVAQALA",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/U47855",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Nasutitermes Takasagoensis",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MSYETEGELLGNDLPNCYVPDMKMLLQGTKGTTLQKEDLINRKYSVYRKGRKYSMVPNTCREGTAWENTCKWEINLTISCTTCRIWSE",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/1693749654",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Colicin E1 Protein",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "METAVAYYKDGVPYDDKGQVIITLLNGTPDGSGSGGGGGKGGSKSESSAAIHATAKWSTAQLKKTQAEQAARAKAAAEAQAKAKANRDALTQRLKDIVNEALRHNASRTPSATELAHANNAAMQAEAERLRLAKAEEKARKEAEAAEKAFQEAEQRRKEIEREKAETERQLKLAEAEEKRLAALSEEAKAVEIAQKKLSAAQSEVVKMDGEIKTLNSRLSSSIHARDAEMKTLAGKRNELAQASAKYKELDELVKKLSPRANDPLQNRPFFEATRRRVGAGKIREEKQKQVTASETRINRINADITQIQKAISQVSNNRNAGIARVHEAEENLKKAQNNLLNSQIKDAVDATVSFYQTLTEKYGEKYSKMAQELADKSKGKKIGNVNEALAAFEKYKDVLNKKFSKADRDAIFNALASVKYDDWAKHLDQFAKYLKITGHVSFGYDVVSDILKIKDTGDWKPLFLTLEKKAADAGVSYVVALLFSLLAGTTLGIWGIAIVTGILCSYIDKNKLNTINEVLGI",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Colicin E1 Immunity Protein",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MSLRYYIKNILFGLYCTLIYIYLITKNSEGYYFLVSDKMLYAIVISTILCPYSKYAIEYIAFNFIKKDFFERRKNLNNAPVAKLNLFMLYNLLCLVLAIPFGLLGLFISIKNN",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Kil Protein",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MRKRFFVGIFAINLLVGCQANYIPDVQGGTIAPSSSSKLTGIAVQ",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 6.0 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MEKRLLRGLLPVPGLLLTCSFRPYPLILWITVLPFLCESVPLAAVERPSVASQ",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 6.4 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MPHRCVRRKCTSRRFSASSLTDSLRSVVRLRRAVLTHTKTVTQLSTESGDKAGKNM",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 6.7 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MNWLRHPLNIKNWMSWSKNYHQEPMIRFRTVLFLKQPDDGLGPVRLEKKNKNR",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 6.9 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MSEEAEKRLDVHFLLTHLCGISHPAWRTFHTIRTDAAWLSQYTLRYRYVTGSGLRPDTR",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 7.6 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MNRPIFVNRFTTTPMSFTAAASHVSGMTVKTSDTCSSRRRSQLVCERMPGADKPVRARQQVLAGVGAQP",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 8.8 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MRLFVTMPHVRLQQQSLLMLIMQLCRRKQSVCALRKQKKKPVKKRKQQKRLFRKQNNDVKRLNGRRLKQNAS",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 10.2 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MRSFFSARNLLLANKKTTATNGGLFAGSRATNSFSEGNWLQQSADTKYCPSSVAVVGPLLQELCSTVCAIIALLIRLPVAAASGVKACLTGLDSRR",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 13.8 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MSKRPGTGRRPRSRRFSIGSAPLTSITKIDAQVRGGETRQDYKATRRFPLEAPSCALLFRPCRLPDTCPPFSLREAWRFLIAHAVGISVRCRSFAPSWAVCTNPPFSPTAAPYPVTIVLSPTR",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: 14.5 kd ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MPGMLFHAALWGTGCESYCCCYHGDKTKFVSGTSHECLPTLKYLFSVSYYPKTILSSVSDSVQRPNNLDQNPRFFSSSSACLSWAISFCSCSRSASWRLRSISCACLSSSISVRHCFSSFSSRRMRSVC",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: RNA I Inhibition Modulator Protein",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MTKQEKTALNMARFIRSQTLTLLEKLNELDADEQADICESLHDHADELYRSCLARFGDDGENL",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Mob1 Protein",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MSEVFTVIPETCEAAAVKLIGVVVKRFTNIGLFICVQFVELLQQR",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Mob2 ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MIPMKRERMLTIRVTDDEHARLLERCEGKQLAVWMRRVCLGEPVARSGKLPTLAPPLLRQLAAIGNNLNQTARKVNSGQWSSGDRVQVVAALMAIGDELRRLRLAVREQGARDDS",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Mob3 ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MIVKFHARGKGGGSGPVDYLLGRERNREGATVLQGIPEEVRELIDATPFAKKYTSGVLSFAEKELPPGGREKVMASFERVLMPGLEKNQYSILWVEHQDKGRLELNFVIPNMELQTGKRLQPYYDRADRPRIDAWQTLLNHHYGLHDPNAPENRRTLTLPDNLPETKQALAEGVTRGIDALYHAGEIKGRQDVIQALTEAGLEVVRVTRSSISIADPNGGKNIRLKGAFYEQSFADGRGVREKAERESRIYRENAEQRVQEARRICKRGCDIKRDENQRRYSPVHSLDRGIAGKTPGRGERGDDAAQEGRVKAGREYGHDVTGDSLSPVYREWRDALVSWREDTGEPGRNQEAGRDIAETEREDMGRGVCAGREQEIPCPSVREISGGDSLSGERVGTSEGVTQSDRAGNTFAERLRAAATGLYAAAERMGERLRGIAEDVFAYATGQRDAERAGHAVESAGATLERADRTLEPVIQRELEIREERLIQEREHVLSLERERQPEIQERTLDGPSLGW",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Mob4 ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MAVVRLITCWGGSVTAKAQRCFRVYRKKSGNSSMPRHLRRNTRPVFCRSRRRSCRREDVKK",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Mob6 ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MSNLLQTGAEFEKKLKERAESTEKMLNNEFRRLGESVSEAVTSNETKIRDAIALFTASTEESLEKHREGVKEAMMQHRRDVLKLAGNTGMMLLGIVFLLFTASGGTLWYLGGRIQANLEEIRKQEETLQKLNAKTWGVEFVQDGNRKFLVLPYGKSAEVIPFQGKEWVHLKE",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Mob7 ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MTELETHLLNALEQLQQDYMQRLSEWESAFVELQKMFSLTQRDNAMLNERVMQLSQQVQHLSEQTERLSQLYSENWR",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Mob8 ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MCYPXNGSVSRKYRNARWMALRWDGETMKNGSFSGLSGGNVACTLWLHRYSYG",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Mob9 ORF",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MGVMWPVPSGCIGIHTVKIYQARSRSFXGGLLPFLPVCCRDRAERVLAVRTIKGLW",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Entry Exclusion Protein 1",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MAWHTLRDALKMTGRSRSQFYRDMRGGLVSYRTGRDGRREFETSELIRAYGELKQNETPERHSEGHAENPHDQQTERILRELNELKQCLTLMLEDKQAQDMDRRRQEAEREQLQNEIAQLRQALELEKKRGFWSRLFGR",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	},
 	{
 		"name": "Escherichia Coli: Entry Exclusion Protein 2",
+		"multipleSingleLetterAminoAcidChains": false,
 		"singleLetterAminoAcidChain": "MRRTGNKLCLIAMITATVALTACTPKGSVEQHTRHYVYASDDGFDPNFSTQKADTTRMMVPFFRQFWDMGAKDKATGKSRSDVQQRIQQFHSQEFLNSLRGTTQFAGTDYRSKDLTPKKSRLLADTISAVYLDGYEGRQ",
 		"link": "https://www.ncbi.nlm.nih.gov/nuccore/J01566",
-		"from": "NIH"
+		"from": "NIH",
+		"type": "protein"
 	}
 ]

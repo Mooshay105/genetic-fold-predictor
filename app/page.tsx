@@ -1,15 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import codonTable from "../public/codon-table.json";
+import { useRef, useState } from "react";
 import proteinPresets from "../public/protein-presets.json";
 import Script from "next/script";
 import { getProteinPDBData } from "@/utils/actions";
+import { PredictionInput } from "@/utils/types";
 
 export default function Home() {
-	const [dna, setDNA] = useState("");
-	const [aminoAcidChain, setAminoAcidChain] = useState("");
-	const [singleLetterAminoAcidChain, setSingleLetterAminoAcidChain] = useState("");
+	const [predictionInputs, setPredictionInputs] = useState<PredictionInput[]>([]);
+
+	const [newPredictionInput, setNewPredictionInput] = useState<{
+		type: "protein" | "dna";
+		sequence: string;
+	}>({
+		type: "protein",
+		sequence: "",
+	});
 
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
@@ -18,8 +24,51 @@ export default function Home() {
 	const [name, setName] = useState<string>("protein");
 	const [shouldShowPresetSelector, showPresetSelector] = useState(false);
 	const viewerRef = useRef<HTMLDivElement>(null);
-	const skipCodeNextRef = useRef(false);
-	const skipDNANextRef = useRef(false);
+
+	function getNewID(id: string) {
+		if (id === "Z") return "A";
+		if (id === "z") return "a";
+
+		return String.fromCharCode(id.charCodeAt(0) + 1);
+	}
+
+	function addNewPredictionInput() {
+		if (newPredictionInput.sequence.trim() === "") return;
+		const newPredictionInputs = [...predictionInputs];
+		console.log();
+		newPredictionInputs.push({
+			type: newPredictionInput.type,
+			sequence: newPredictionInput.sequence.trim(),
+			id:
+				newPredictionInputs.length === 0
+					? "A"
+					: getNewID(newPredictionInputs[newPredictionInputs.length - 1].id),
+			msa: {
+				main_db: {
+					csv: {
+						alignment: `key,sequence\n-1,${newPredictionInput.sequence.trim()}`,
+						format: "csv",
+					},
+				},
+			},
+			output_format: "pdb",
+		});
+		setPredictionInputs(newPredictionInputs);
+		setNewPredictionInput({
+			type: "protein",
+			sequence: "",
+		});
+	}
+
+	function removePredictionInput(index: number) {
+		const newPredictionInputs: PredictionInput[] = [];
+		predictionInputs.forEach((predictionInput, i) => {
+			if (i !== index) {
+				newPredictionInputs.push(predictionInput);
+			}
+		});
+		setPredictionInputs(newPredictionInputs);
+	}
 
 	function downloadImg() {
 		if (viewer === undefined) return;
@@ -41,7 +90,7 @@ export default function Home() {
 	}
 
 	async function handlePredict() {
-		if (singleLetterAminoAcidChain === "" && dna === "") {
+		if (predictionInputs.length === 0 || predictionInputs[0].sequence === "") {
 			setError("Please Provide A DNA Sequence.");
 			return;
 		}
@@ -49,7 +98,7 @@ export default function Home() {
 		setLoading(true);
 
 		try {
-			const pdbData = await getProteinPDBData(singleLetterAminoAcidChain);
+			const pdbData = await getProteinPDBData(predictionInputs);
 
 			if (!viewerRef.current || !window.$3Dmol) return;
 
@@ -73,55 +122,6 @@ export default function Home() {
 		}
 	}
 
-	useEffect(() => {
-		if (skipDNANextRef.current === true) {
-			skipDNANextRef.current = false;
-			return;
-		}
-		const splitBaseTriplets: string[] =
-			dna
-				.replaceAll(" ", "")
-				.replaceAll("U", "T")
-				.replaceAll("u", "t")
-				.toUpperCase()
-				.match(/.{1,3}/g) || [];
-		let protoAminoAcidChain = "";
-		let protoAminoCodeChain = "";
-		splitBaseTriplets.forEach((baseTriplet) => {
-			const aminoAcid = codonTable.dna[baseTriplet as keyof typeof codonTable.dna]?.acid;
-			const aminoCode = codonTable.dna[baseTriplet as keyof typeof codonTable.dna]?.code;
-			if (aminoAcid !== undefined) {
-				protoAminoAcidChain = protoAminoAcidChain + " " + aminoAcid;
-				protoAminoCodeChain = protoAminoCodeChain + aminoCode;
-			}
-		});
-		skipCodeNextRef.current = true;
-		setAminoAcidChain(protoAminoAcidChain.trim());
-		setSingleLetterAminoAcidChain(protoAminoCodeChain);
-	}, [dna]);
-
-	useEffect(() => {
-		if (skipCodeNextRef.current === true) {
-			skipCodeNextRef.current = false;
-			return;
-		}
-		skipDNANextRef.current = true;
-		setDNA("");
-		const splitAcids: string[] =
-			singleLetterAminoAcidChain
-				.replaceAll(" ", "")
-				.toUpperCase()
-				.match(/.{1,1}/g) || [];
-		let protoAminoAcidChain = "";
-		splitAcids.forEach((acid) => {
-			const aminoAcid = codonTable.code[acid as keyof typeof codonTable.code]?.acid;
-			if (aminoAcid !== undefined) {
-				protoAminoAcidChain = protoAminoAcidChain + " " + aminoAcid;
-			}
-		});
-		setAminoAcidChain(protoAminoAcidChain.trim());
-	}, [singleLetterAminoAcidChain]);
-
 	return (
 		<div className="flex flex-col text-center justify-center">
 			<div className="fixed top-0 left-0 w-1/3 h-full border-r-2 border-t-2 border-amber-50 bg-background p-2 flex flex-col justify-between overflow-scroll rounded-tr-2xl">
@@ -130,54 +130,140 @@ export default function Home() {
 						src="https://3Dmol.org/build/3Dmol-min.js"
 						strategy="beforeInteractive"
 					/>
-					<h1 className="text-2xl font-bold">DNA/RNA Sequence:</h1>
-					<input
-						id="dnaSequence"
-						type="text"
-						value={dna}
-						onChange={(event) => setDNA(event.target.value)}
-						placeholder="ATC TCC GAG TCG TAG"
-						className="border border-white w-full mx-auto rounded px-2"
-					/>
-					<h1 className="text-2xl font-bold">Single Letter Amino Acid Code:</h1>
-					<div className="flex flex-row gap-2">
-						<input
-							id="singleLetterAminoAcidChain"
-							type="text"
-							value={singleLetterAminoAcidChain.trim()}
-							onChange={(event) => setSingleLetterAminoAcidChain(event.target.value)}
-							placeholder="ISES"
-							className="border border-white w-full mx-auto rounded px-2"
-						/>
-						<button
-							onClick={() => {
-								showPresetSelector(true);
-							}}
-							disabled={loading}
-							className="border border-white mx-auto rounded px-2 whitespace-nowrap"
-						>
-							Load Protein
-						</button>
+					<h1 className="text-2xl font-bold">Proteins and DNA:</h1>
+					<div className={`flex flex-col gap-2 ${error ? "mb-13" : "mb-8"}`}>
+						{predictionInputs.map((predictionInput, index) => (
+							<div key={index} className="flex flex-row gap-2">
+								<select
+									id="type"
+									value={predictionInputs[index].type}
+									onChange={(event) => {
+										const newPredictionInputs = [...predictionInputs];
+										newPredictionInputs[index].type = event.target.value as
+											| "protein"
+											| "dna";
+										setPredictionInputs(newPredictionInputs);
+									}}
+									className="border border-white w-min mx-auto rounded px-2"
+								>
+									<option value="protein">Protein</option>
+									<option value="dna">DNA</option>
+								</select>
+								<input
+									id="singleLetterAminoAcidChain"
+									type="text"
+									value={predictionInputs[index].sequence}
+									onChange={(event) => {
+										const newPredictionInputs = [...predictionInputs];
+										newPredictionInputs[index].sequence = event.target.value;
+										newPredictionInputs[index].msa = {
+											main_db: {
+												csv: {
+													alignment: `key,sequence\n-1,${event.target.value}`,
+													format: "csv",
+												},
+											},
+										};
+										setPredictionInputs(newPredictionInputs);
+									}}
+									placeholder="ISES"
+									className="border border-white w-full mx-auto rounded px-2"
+								/>
+								<button
+									onClick={() => {
+										removePredictionInput(index);
+									}}
+									disabled={loading}
+									className="border border-white mx-auto rounded p-1 whitespace-nowrap"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 24 24"
+										width="24"
+										height="24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2.5"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<path d="M6 6L18 18M6 18L18 6" />
+									</svg>
+								</button>
+							</div>
+						))}
 					</div>
-					<button
-						onClick={handlePredict}
-						//disabled={loading}
-						disabled={true}
-						className="border border-white mx-auto rounded px-2 mt-4"
-					>
-						{loading ? "Predicting..." : "Predict & Render"}
-					</button>
-					{error && <p style={{ color: "red" }}>{error}</p>}
-					<p style={{ color: "red" }}>
-						ESMFold has been deprecated. We are moving to other models. Sorry for the
-						inconvenience.
-					</p>
-				</div>
-				<div className="">
-					<h2 className="text-2xl font-bold">Amino Acid Code:</h2>
-					<p className="border border-white w-full min-h-6 max-h-60 overflow-scroll mb-2 mx-auto rounded px-2 text-left">
-						{aminoAcidChain}
-					</p>
+					<div className="fixed bottom-0 left-0 bg-background w-1/3 border-r-2 border-amber-50 px-2">
+						{error && <p style={{ color: "red" }}>{error}</p>}
+						<div className="flex flex-row gap-2 mt-2">
+							<select
+								id="type"
+								value={newPredictionInput.type}
+								onChange={(event) => {
+									setNewPredictionInput({
+										type: event.target.value as "protein" | "dna",
+										sequence: newPredictionInput.sequence,
+									});
+								}}
+								className="border border-white w-min mx-auto rounded px-2"
+							>
+								<option value="protein">Protein</option>
+								<option value="dna">DNA</option>
+							</select>
+							<input
+								id="singleLetterAminoAcidChain"
+								type="text"
+								value={newPredictionInput.sequence}
+								onChange={(event) => {
+									setNewPredictionInput({
+										type: newPredictionInput.type,
+										sequence: event.target.value,
+									});
+								}}
+								placeholder="ISES"
+								className="border border-white w-full mx-auto rounded px-2"
+							/>
+							<button
+								onClick={() => {
+									addNewPredictionInput();
+								}}
+								disabled={loading}
+								className="border border-white mx-auto rounded whitespace-nowrap p-1"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									width="24"
+									height="24"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2.5"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+								>
+									<path d="M4 12.5L9.5 18L20 6" />
+								</svg>
+							</button>
+						</div>
+						<div className="flex flex-row gap-2 items-center justify-center mt-2">
+							<button
+								onClick={() => {
+									showPresetSelector(true);
+								}}
+								disabled={loading}
+								className="border border-white rounded px-2 whitespace-nowrap"
+							>
+								Load Preset
+							</button>
+							<button
+								onClick={handlePredict}
+								disabled={loading}
+								className="border border-white rounded px-2"
+							>
+								{loading ? "Predicting..." : "Predict & Render"}
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div
@@ -196,13 +282,13 @@ export default function Home() {
 					className="border border-white w-full mx-auto rounded px-2"
 				/>
 				<button
-					className={`border ${viewer !== undefined ? "border-amber-50 bg-[#3d3d3d]" : "border-amber-50/25 bg-[#3d3d3d]/25 text-font-color/25"} rounded w-min h-min whitespace-nowrap px-2`}
+					className={`border ${viewer !== undefined ? "border-amber-50" : "border-amber-50/25 bg-[#3d3d3d]/25 text-font-color/25"} rounded w-min h-min whitespace-nowrap px-2`}
 					onClick={downloadImg}
 				>
 					Download PNG
 				</button>
 				<button
-					className={`border ${viewer !== undefined ? "border-amber-50 bg-[#3d3d3d]" : "border-amber-50/25 bg-[#3d3d3d]/25 text-font-color/25"} rounded w-min h-min whitespace-nowrap px-2`}
+					className={`border ${viewer !== undefined ? "border-amber-50" : "border-amber-50/25 bg-[#3d3d3d]/25 text-font-color/25"} rounded w-min h-min whitespace-nowrap px-2`}
 					onClick={downloadPDB}
 				>
 					Download PDB
@@ -246,9 +332,56 @@ export default function Home() {
 						<ul>
 							{proteinPresets.map((preset) => (
 								<li
-									key={preset.singleLetterAminoAcidChain}
+									key={preset.name}
 									onClick={() => {
-										setSingleLetterAminoAcidChain(preset.singleLetterAminoAcidChain);
+										const newPredictionInputs = [...predictionInputs];
+										if (!preset.multipleSingleLetterAminoAcidChains) {
+											newPredictionInputs.push({
+												type: preset.type as "protein" | "dna",
+												sequence: preset.singleLetterAminoAcidChain || "",
+												id:
+													newPredictionInputs.length === 0
+														? "A"
+														: getNewID(
+																newPredictionInputs[newPredictionInputs.length - 1].id,
+															),
+												msa: {
+													main_db: {
+														csv: {
+															alignment: `key,sequence\n-1,${preset.singleLetterAminoAcidChain}`,
+															format: "csv",
+														},
+													},
+												},
+												output_format: "pdb",
+											});
+										} else {
+											preset.singleLetterAminoAcidChains?.forEach(
+												(singleLetterAminoAcidChain) => {
+													newPredictionInputs.push({
+														type: preset.type as "protein" | "dna",
+														sequence: singleLetterAminoAcidChain || "",
+														id:
+															newPredictionInputs.length === 0
+																? "A"
+																: getNewID(
+																		newPredictionInputs[newPredictionInputs.length - 1]
+																			.id,
+																	),
+														msa: {
+															main_db: {
+																csv: {
+																	alignment: `key,sequence\n-1,${singleLetterAminoAcidChain}`,
+																	format: "csv",
+																},
+															},
+														},
+														output_format: "pdb",
+													});
+												},
+											);
+										}
+										setPredictionInputs(newPredictionInputs);
 										showPresetSelector(false);
 										setName(preset.name);
 									}}
