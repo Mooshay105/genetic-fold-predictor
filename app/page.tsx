@@ -220,6 +220,11 @@ export default function Home() {
 										sequence: event.target.value,
 									});
 								}}
+								onKeyDown={(event) => {
+									if (event.key === "Enter") {
+										addNewPredictionInput();
+									}
+								}}
 								placeholder="ISES"
 								className="border border-white w-full mx-auto rounded px-2"
 							/>
