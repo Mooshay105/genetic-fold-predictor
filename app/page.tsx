@@ -72,8 +72,8 @@ export default function Home() {
 
 	function downloadImg() {
 		if (viewer === undefined) return;
-		let imageData = viewer.pngURI();
-		let link = document.createElement("a");
+		const imageData = viewer.pngURI();
+		const link = document.createElement("a");
 		link.href = imageData;
 		link.download = `${name}.png`;
 		link.click();
@@ -82,8 +82,8 @@ export default function Home() {
 	function downloadPDB() {
 		if (viewer === undefined) return;
 		if (pdb === null) return;
-		let blob = new Blob([pdb], { type: "text/plain" });
-		let link = document.createElement("a");
+		const blob = new Blob([pdb], { type: "text/plain" });
+		const link = document.createElement("a");
 		link.href = URL.createObjectURL(blob);
 		link.download = `${name}.pdb`;
 		link.click();

@@ -1,6 +1,8 @@
 declare global {
 	interface Window {
-		$3Dmol: any;
+		$3Dmol?: {
+			createViewer(element: HTMLElement, config: object): Mol3DViewer;
+		};
 	}
 }
 
