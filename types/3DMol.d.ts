@@ -4,4 +4,7 @@ interface Mol3DViewer {
 	setStyle(sel: object, style: object): void;
 	zoomTo(): void;
 	render(): void;
+	resize(): void;
+	spin(axis: boolean | string): void;
+	clear(): void;
 }

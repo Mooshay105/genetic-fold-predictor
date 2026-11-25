@@ -1,8 +1,12 @@
 # Genetic Fold Predictor
 
 Next.js 16 (App Router) + React 19 + Tailwind 4 site that sends protein/DNA
-sequences to NVIDIA's hosted OpenFold3 API (`utils/actions.ts`, a server
-action) and renders the returned PDB with 3Dmol.js in the browser.
+sequences to NVIDIA's hosted Boltz-2 (default, returns mmCIF) or OpenFold3
+(returns PDB) API (`utils/actions.ts`, a server action, polling NVCF while a
+job is queued; `app/page.tsx` sets `maxDuration = 300` for it) and renders the
+result with 3Dmol.js in the browser. The UI has two themes, Modern and
+Windows 98, chosen by the `theme` cookie; both views share
+`app/components/use-predictor.ts`.
 
 ## Full send
 
