@@ -12,7 +12,7 @@ wanted to publish it.
 
 - **Framework:** Next.js
 - **Styling:** Tailwind CSS
-- **Protein Folding:** Openfold3 (via NVIDIA Cloud)
+- **Protein Folding:** Boltz-2 or OpenFold3 (via NVIDIA Cloud)
 
 ## License
 
