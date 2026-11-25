@@ -13,6 +13,8 @@ wanted to publish it.
 - **Framework:** Next.js
 - **Styling:** Tailwind CSS
 - **Protein Folding:** Boltz-2 or OpenFold3 (via NVIDIA Cloud)
+- **Self-hosted folding:** [fold-server](server/README.md), a small CLI that
+  queues jobs too big for NVIDIA's API and runs Boltz-2 on your own machine
 
 ## License
 

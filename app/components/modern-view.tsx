@@ -9,6 +9,7 @@ import { useTheme } from "./theme";
 import { invalidResidues } from "@/utils/chains";
 import { presetSummary, searchPresets } from "@/utils/presets";
 import { Model } from "@/utils/actions";
+import { SERVER_GUIDE_URL, describeJob, jobResidues } from "@/utils/fold-server-api";
 import { VIEWER_BACKGROUND } from "@/utils/theme";
 import { MoleculeType } from "@/utils/types";
 import {
@@ -142,6 +143,133 @@ function PresetDialog({ p }: { p: Predictor }) {
 	);
 }
 
+function ServerDialog({ p }: { p: Predictor }) {
+	const [link, setLink] = useState("");
+	const [modalRef, onBackdropClick] = useModal(p.serverOpen, () => p.setServerOpen(false));
+	const { server } = p;
+	const busy = p.serverBusy || server.checking;
+
+	return (
+		<dialog
+			ref={modalRef}
+			onClick={onBackdropClick}
+			className="m-auto w-[min(44rem,calc(100vw-2rem))] max-h-[85vh] border-2 border-line rounded-2xl bg-background text-font-color p-0 backdrop:bg-black/70"
+		>
+			<div className="flex flex-col max-h-[85vh] p-3 gap-3">
+				<div className="flex flex-row justify-between items-center">
+					<h2 className="text-xl font-bold">My Fold Server</h2>
+					<button
+						onClick={() => p.setServerOpen(false)}
+						aria-label="Close"
+						className="rounded p-1 hover:bg-line/10 cursor-pointer"
+					>
+						<CrossIcon />
+					</button>
+				</div>
+
+				{server.connection === null ? (
+					<form
+						className="flex flex-col gap-2"
+						onSubmit={async (event) => {
+							event.preventDefault();
+							if (await server.connect(link)) setLink("");
+						}}
+					>
+						<p className="text-secondary-font-color text-sm">
+							Run <code className="text-font-color">fold-server start</code> on a computer you own, then paste
+							the link it prints. Jobs too big for NVIDIA&apos;s API are queued there instead.{" "}
+							<a href={SERVER_GUIDE_URL} target="_blank" rel="noreferrer" className="underline">
+								Setup guide
+							</a>
+						</p>
+						<div className="flex flex-row gap-2">
+							<input
+								type="url"
+								data-autofocus
+								aria-label="Server link"
+								value={link}
+								onChange={(event) => setLink(event.target.value)}
+								placeholder="http://localhost:8765/?token=..."
+								className={`${control} flex-1 min-w-0`}
+							/>
+							<button type="submit" disabled={busy || link.trim() === ""} className={button}>
+								{server.checking ? "Connecting..." : "Connect"}
+							</button>
+						</div>
+					</form>
+				) : (
+					<div className="flex flex-row flex-wrap items-center gap-2 text-sm">
+						<span className={`w-2 h-2 rounded-full ${server.info ? "bg-green-400" : "bg-red-400"}`} aria-hidden />
+						<span className="text-secondary-font-color min-w-0 truncate flex-1">
+							{server.info
+								? `${server.connection.url} · ${server.info.queued} queued, ${server.info.running} running`
+								: `${server.connection.url} · not reachable`}
+						</span>
+						<button onClick={() => server.refresh()} disabled={busy} className={button}>
+							Refresh
+						</button>
+						<button onClick={p.queueCurrent} disabled={busy || p.inputs.length === 0} className={button}>
+							Queue current chains
+						</button>
+						<button onClick={server.disconnect} className={button}>
+							Disconnect
+						</button>
+					</div>
+				)}
+
+				{server.status && (
+					<p role="alert" className="text-red-400 text-sm [overflow-wrap:anywhere]">
+						{server.status}
+					</p>
+				)}
+
+				{server.connection !== null && (
+					<ul className="overflow-y-auto flex flex-col gap-1 pr-1">
+						{server.jobs.length === 0 && (
+							<li className="text-secondary-font-color px-2 py-6 text-center">
+								No jobs yet. Predictions that NVIDIA cannot handle land here.
+							</li>
+						)}
+						{server.jobs.map((job) => (
+							<li key={job.id} className="flex flex-col gap-1 rounded border border-line/30 px-2 py-1.5">
+								<div className="flex flex-row flex-wrap items-center gap-2">
+									<span className="font-bold min-w-0 truncate flex-1">{job.name}</span>
+									<span
+										className={`text-sm ${job.status === "failed" ? "text-red-400" : job.status === "done" ? "text-green-400" : "text-secondary-font-color"}`}
+									>
+										{describeJob(job)}
+									</span>
+								</div>
+								<div className="flex flex-row flex-wrap items-center gap-2 text-sm">
+									<span className="text-secondary-font-color flex-1">
+										{job.chains.length} chain{job.chains.length === 1 ? "" : "s"}, {jobResidues(job)} residues ·{" "}
+										{new Date(job.createdAt).toLocaleString()}
+									</span>
+									{job.status === "done" ? (
+										<button onClick={() => p.openJob(job)} disabled={busy} className={button}>
+											Open
+										</button>
+									) : (
+										<button onClick={() => p.editJob(job)} disabled={busy || p.loading} className={button}>
+											Edit
+										</button>
+									)}
+									<button onClick={() => p.removeJob(job)} disabled={busy} className={button}>
+										Delete
+									</button>
+								</div>
+								{job.error && (
+									<p className="text-xs text-red-400 max-h-24 overflow-y-auto [overflow-wrap:anywhere]">{job.error}</p>
+								)}
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
+		</dialog>
+	);
+}
+
 export function ModernView({ p }: { p: Predictor }) {
 	const { setTheme } = useTheme();
 
@@ -224,6 +352,31 @@ export function ModernView({ p }: { p: Predictor }) {
 				</ol>
 
 				<div className="flex flex-col gap-2 px-3 pb-3 pt-2 border-t border-line/25">
+					{p.editingJob && (
+						<div className="flex flex-row items-center gap-2 border border-line/60 rounded px-2 py-1 text-sm">
+							<span className="flex-1 min-w-0">
+								Editing queued job <b>{p.editingJob.name}</b>. Change the chains, then press Save Job.
+							</span>
+							<button
+								onClick={p.cancelEdit}
+								className="underline text-secondary-font-color hover:text-font-color cursor-pointer"
+							>
+								Cancel
+							</button>
+						</div>
+					)}
+					{p.notice && (
+						<div role="status" className="flex flex-row items-start gap-2 border border-green-400/60 rounded px-2 py-1 text-sm">
+							<p className="flex-1 min-w-0 [overflow-wrap:anywhere]">{p.notice}</p>
+							<button
+								onClick={() => p.setNotice("")}
+								aria-label="Dismiss"
+								className="rounded hover:bg-line/10 cursor-pointer"
+							>
+								<CrossIcon />
+							</button>
+						</div>
+					)}
 					{p.error && (
 						<p
 							role="alert"
@@ -287,7 +440,7 @@ export function ModernView({ p }: { p: Predictor }) {
 							))}
 						</select>
 					</label>
-					<div className="flex flex-row gap-2">
+					<div className="flex flex-row flex-wrap gap-2">
 						<button
 							onClick={() => p.setPresetsOpen(true)}
 							disabled={p.loading}
@@ -296,11 +449,18 @@ export function ModernView({ p }: { p: Predictor }) {
 							Load Preset
 						</button>
 						<button
-							onClick={p.predict}
-							disabled={p.loading || p.inputs.length === 0}
-							className="flex-1 rounded px-2 py-1 bg-line text-background font-bold hover:bg-line/85 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+							onClick={() => p.setServerOpen(true)}
+							disabled={p.loading}
+							className={`${button} flex-1`}
 						>
-							{p.loading ? "Predicting..." : "Predict & Render"}
+							My server{p.server.info && p.server.info.queued + p.server.info.running > 0 ? ` (${p.server.info.queued + p.server.info.running})` : ""}
+						</button>
+						<button
+							onClick={p.editingJob ? p.saveJob : p.predict}
+							disabled={p.loading || p.serverBusy || p.inputs.length === 0}
+							className="flex-1 rounded px-2 py-1 bg-line text-background font-bold hover:bg-line/85 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap"
+						>
+							{p.editingJob ? "Save Job" : p.loading ? "Predicting..." : "Predict & Render"}
 						</button>
 					</div>
 				</div>
@@ -422,6 +582,7 @@ export function ModernView({ p }: { p: Predictor }) {
 			</section>
 
 			<PresetDialog p={p} />
+			<ServerDialog p={p} />
 		</main>
 	);
 }

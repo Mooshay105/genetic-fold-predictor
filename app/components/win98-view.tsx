@@ -19,6 +19,7 @@ import {
 import { Preset, invalidResidues } from "@/utils/chains";
 import { presetSummary, searchPresets } from "@/utils/presets";
 import { Model } from "@/utils/actions";
+import { Job, SERVER_GUIDE_URL, describeJob, jobResidues } from "@/utils/fold-server-api";
 import { VIEWER_BACKGROUND } from "@/utils/theme";
 import { MoleculeType } from "@/utils/types";
 import {
@@ -191,6 +192,144 @@ function ErrorDialog({ p }: { p: Predictor }) {
 	);
 }
 
+function NoticeDialog({ p }: { p: Predictor }) {
+	const close = () => p.setNotice("");
+	return (
+		<DialogWindow title={APP_TITLE} open={p.notice !== "" && p.error === ""} onClose={close} width="min(400px, calc(100vw - 16px))">
+			<div className="flex flex-row gap-4 items-start p-2">
+				<InfoIcon />
+				<p className="pt-1 min-w-0 max-h-60 overflow-y-auto [overflow-wrap:anywhere]">{p.notice}</p>
+			</div>
+			<div className="flex justify-center gap-2 pt-2">
+				<button className="w98-btn w98-btn-default" onClick={close} data-autofocus>
+					OK
+				</button>
+				<button
+					className="w98-btn"
+					onClick={() => {
+						close();
+						p.setServerOpen(true);
+					}}
+				>
+					My Server...
+				</button>
+			</div>
+		</DialogWindow>
+	);
+}
+
+function ServerDialog({ p }: { p: Predictor }) {
+	const [link, setLink] = useState("");
+	const [selectedId, setSelectedId] = useState<string | null>(null);
+	const { server } = p;
+	const busy = p.serverBusy || server.checking;
+	const selected: Job | undefined = server.jobs.find((job) => job.id === selectedId);
+	const close = () => p.setServerOpen(false);
+	const columns = "grid grid-cols-[1fr_9rem_5rem] gap-2";
+
+	return (
+		<DialogWindow title="My Fold Server" open={p.serverOpen} onClose={close} width="min(560px, calc(100vw - 16px))">
+			<div className="flex flex-col gap-2">
+				{server.connection === null ? (
+					<fieldset className="w98-groupbox flex flex-col gap-2">
+						<legend>Connect</legend>
+						<p>
+							Run <span className="font-mono">fold-server start</span> on a computer you own, then paste the link it prints. Jobs too big for NVIDIA&apos;s
+							API are queued there.{" "}
+							<a href={SERVER_GUIDE_URL} target="_blank" rel="noreferrer" className="underline text-[#0000c0]">
+								Setup guide
+							</a>
+						</p>
+						<form
+							className="flex flex-row gap-1"
+							onSubmit={async (event) => {
+								event.preventDefault();
+								if (await server.connect(link)) setLink("");
+							}}
+						>
+							<input
+								type="url"
+								data-autofocus
+								aria-label="Server link"
+								value={link}
+								onChange={(event) => setLink(event.target.value)}
+								placeholder="http://localhost:8765/?token=..."
+								className="w98-field flex-1 min-w-0"
+							/>
+							<button type="submit" className="w98-btn w98-btn-default" disabled={busy || link.trim() === ""}>
+								{server.checking ? "Wait..." : "Connect"}
+							</button>
+						</form>
+					</fieldset>
+				) : (
+					<>
+						<p className="truncate">
+							{server.info
+								? `Connected to ${server.connection.url}: ${server.info.queued} queued, ${server.info.running} running.`
+								: `${server.connection.url} is not reachable.`}
+						</p>
+						<div className="w98-sunken bg-white">
+							<div className={`${columns} bg-[var(--w98-face)]`}>
+								<span className="w98-btn !min-w-0 !px-1 text-left">Name</span>
+								<span className="w98-btn !min-w-0 !px-1 text-left">Status</span>
+								<span className="w98-btn !min-w-0 !px-1 text-left">Residues</span>
+							</div>
+							<ul role="listbox" aria-label="Jobs" className="h-52 overflow-y-auto">
+								{server.jobs.map((job) => {
+									const isSelected = job.id === selectedId;
+									return (
+										<li key={job.id} role="option" aria-selected={isSelected}>
+											<button
+												className={`w98-list-item w-full ${columns} ${isSelected ? "!bg-[var(--w98-select)] !text-white" : ""}`}
+												onClick={() => setSelectedId(job.id)}
+												onDoubleClick={() => (job.status === "done" ? p.openJob(job) : p.editJob(job))}
+											>
+												<span className="truncate">{job.name}</span>
+												<span className={`truncate ${job.status === "failed" && !isSelected ? "text-[#a00000]" : ""}`}>{describeJob(job)}</span>
+												<span className="text-right">{jobResidues(job)}</span>
+											</button>
+										</li>
+									);
+								})}
+								{server.jobs.length === 0 && <li className="p-2 text-[var(--w98-shadow)]">No jobs yet.</li>}
+							</ul>
+						</div>
+						<p className="min-h-4 max-h-16 overflow-y-auto [overflow-wrap:anywhere] text-[var(--w98-shadow)]">
+							{selected?.error ?? (selected ? `Created ${new Date(selected.createdAt).toLocaleString()}, ${selected.chains.length} chain${selected.chains.length === 1 ? "" : "s"}.` : "Select a job.")}
+						</p>
+						<div className="flex flex-row flex-wrap gap-1">
+							<button className="w98-btn" disabled={busy || selected?.status !== "done"} onClick={() => selected && p.openJob(selected)}>
+								Open
+							</button>
+							<button className="w98-btn" disabled={busy || p.loading || !selected || selected.status === "done"} onClick={() => selected && p.editJob(selected)}>
+								Edit
+							</button>
+							<button className="w98-btn" disabled={busy || !selected} onClick={() => selected && p.removeJob(selected)}>
+								Delete
+							</button>
+							<button className="w98-btn" disabled={busy} onClick={() => server.refresh()}>
+								Refresh
+							</button>
+							<button className="w98-btn" disabled={busy || p.inputs.length === 0} onClick={p.queueCurrent}>
+								Queue Chains
+							</button>
+							<button className="w98-btn ml-auto" onClick={server.disconnect}>
+								Disconnect
+							</button>
+						</div>
+					</>
+				)}
+				{server.status && <p className="text-[#a00000] [overflow-wrap:anywhere]">{server.status}</p>}
+				<div className="flex flex-row justify-end">
+					<button className="w98-btn" onClick={close}>
+						Close
+					</button>
+				</div>
+			</div>
+		</DialogWindow>
+	);
+}
+
 function ProgressDialog({ p }: { p: Predictor }) {
 	return (
 		<DialogWindow title="Predicting Structure" open={p.loading} onClose={() => {}} width="min(360px, calc(100vw - 16px))" locked>
@@ -263,7 +402,9 @@ export function Win98View({ p }: { p: Predictor }) {
 		{
 			label: "Run",
 			items: [
-				{ label: "Predict & Render", hint: "F5", onSelect: p.predict, disabled: busy || p.inputs.length === 0 },
+				p.editingJob
+					? { label: "Save Job", hint: "F5", onSelect: p.saveJob, disabled: busy || p.serverBusy || p.inputs.length === 0 }
+					: { label: "Predict & Render", hint: "F5", onSelect: p.predict, disabled: busy || p.inputs.length === 0 },
 				{ separator: true },
 				...(Object.entries(MODEL_LABELS) as [Model, string][]).map(
 					([value, label]): MenuItem => ({
@@ -274,6 +415,14 @@ export function Win98View({ p }: { p: Predictor }) {
 						onSelect: () => p.setModel(value),
 					}),
 				),
+			],
+		},
+		{
+			label: "Server",
+			items: [
+				{ label: "My Server...", onSelect: () => p.setServerOpen(true) },
+				{ label: "Queue Current Chains", onSelect: p.queueCurrent, disabled: busy || p.serverBusy || p.server.connection === null || p.inputs.length === 0 },
+				{ label: "Cancel Job Edit", onSelect: p.cancelEdit, disabled: p.editingJob === null },
 			],
 		},
 		{
@@ -290,7 +439,9 @@ export function Win98View({ p }: { p: Predictor }) {
 	useEffect(() => {
 		shortcuts.current = {
 			predict: () => {
-				if (!busy && p.inputs.length > 0) p.predict();
+				if (busy || p.serverBusy || p.inputs.length === 0) return;
+				if (p.editingJob) p.saveJob();
+				else p.predict();
 			},
 			openPresets: () => {
 				if (!busy) p.setPresetsOpen(true);
@@ -412,8 +563,20 @@ export function Win98View({ p }: { p: Predictor }) {
 						<button className="w98-btn" onClick={() => p.setPresetsOpen(true)} disabled={busy}>
 							Load Preset...
 						</button>
-						<button className="w98-btn w98-btn-default" onClick={p.predict} disabled={busy || p.inputs.length === 0}>
-							Predict &amp; Render
+						<button className="w98-btn" onClick={() => p.setServerOpen(true)} disabled={busy}>
+							My Server...
+						</button>
+						{p.editingJob && (
+							<button className="w98-btn" onClick={p.cancelEdit}>
+								Cancel Edit
+							</button>
+						)}
+						<button
+							className="w98-btn w98-btn-default"
+							onClick={p.editingJob ? p.saveJob : p.predict}
+							disabled={busy || p.serverBusy || p.inputs.length === 0}
+						>
+							{p.editingJob ? "Save Job" : "Predict & Render"}
 						</button>
 					</div>
 				</div>
@@ -479,7 +642,7 @@ export function Win98View({ p }: { p: Predictor }) {
 
 			<div className="w98-statusbar">
 				<span className="flex-1">
-					{busy ? "Predicting..." : p.lastRun && p.structure !== null ? `Done. ${MODEL_LABELS[p.lastRun.model]} took ${(p.lastRun.durationMs / 1000).toFixed(1)} s.` : "Ready"}
+					{p.editingJob ? `Editing job "${p.editingJob.name}". Save it with Run > Save Job (F5).` : busy ? "Predicting..." : p.lastRun && p.structure !== null ? `Done. ${MODEL_LABELS[p.lastRun.model]} took ${(p.lastRun.durationMs / 1000).toFixed(1)} s.` : "Ready"}
 				</span>
 				<span className="w-44">
 					{p.inputs.length} chain{p.inputs.length === 1 ? "" : "s"}, {p.totalResidues} residues
@@ -490,6 +653,8 @@ export function Win98View({ p }: { p: Predictor }) {
 			<PresetDialog p={p} />
 			<AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
 			<ErrorDialog p={p} />
+			<NoticeDialog p={p} />
+			<ServerDialog p={p} />
 			<ProgressDialog p={p} />
 		</div>
 	);
