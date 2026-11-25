@@ -8,6 +8,15 @@ result with 3Dmol.js in the browser. The UI has two themes, Modern and
 Windows 98, chosen by the `theme` cookie; both views share
 `app/components/use-predictor.ts`.
 
+`server/` is `fold-server`, a self-hosted CLI (Bun, no dependencies) that
+queues jobs and runs the local `boltz predict` command. The browser talks to it
+directly (`utils/fold-server-client.ts`, `app/components/use-fold-server.ts`)
+when NVIDIA's API cannot take a job. `utils/fold-server-api.ts` holds the
+shared types and validation. Server code uses only `node:*` APIs plus
+`Bun.serve` (typed locally in `server/src/cli.ts`), so the root typecheck and
+tests cover it. Build it with `bun run build` inside `server/`; its tests
+must never start a real Boltz process.
+
 ## Full send
 
 Use bun only (npm is blocked). The bun version is pinned in `package.json`
